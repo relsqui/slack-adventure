@@ -36,7 +36,8 @@ router.post('/', async (ctx) => {
 });
 
 router.post('/button', async (ctx) => {
-    // Why is this necessary? Bodyparser should handle it ...
+    // Bodyparse doesn't parse this for us because it's a text field inside
+    // the JSON response object, it just happens to contain more JSON.
     var payload = JSON.parse(ctx.request.body.payload);
     if (payload.token != secrets.VER_TOKEN) {
         ctx.response.status = 403;
