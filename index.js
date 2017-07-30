@@ -1,25 +1,24 @@
 import Koa from 'koa';
 import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser';
-import request from 'request-promise-native';
 
 import * as secrets from './secrets';
 
-const koa = new Koa();
-const app = new Router();
+const app = new Koa();
+const router = new Router();
 
 app.use(bodyParser());
 
-app.post('/', async (ctx) => {
+router.post('/', async (ctx) => {
     if (ctx.request.body.token != secrets.VER_TOKEN) {
         ctx.response.status = 403;
         return;
     }
     ctx.response.status = 200;
     ctx.response.body =  {
-        "text": "The top part.",
         "attachments": [{
-            "text": "The bottom part.",
+            "text": "Here are some buttons.",
+            "callback_id": "button_press",
             "actions": [
                 {
                     "name": "one",
@@ -36,5 +35,23 @@ app.post('/', async (ctx) => {
     };
 });
 
-koa.use(app.routes());
-koa.listen(8080);
+router.post('/button', async (ctx) => {
+    // Why is this necessary? Bodyparser should handle it ...
+    var payload = JSON.parse(ctx.request.body.payload);
+    if (payload.token != secrets.VER_TOKEN) {
+        ctx.response.status = 403;
+        return;
+    }
+    ctx.response.status = 200;
+    switch(payload.actions[0].name) {
+        case "one":
+            ctx.response.body = ":one:";
+            break;
+        case "two":
+            ctx.response.body = ":two:";
+            break;
+    }
+});
+
+app.use(router.routes());
+app.listen(8080);
