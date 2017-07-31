@@ -18,7 +18,7 @@ router.post('/', async (ctx) => {
         return;
     }
     ctx.response.status = 200;
-    build_response(ctx, players_by_id[ctx.request.body.user_id]);
+    build_response(ctx, player_by_id(ctx.request.body.user_id));
 });
 
 router.post('/button', async (ctx) => {
@@ -36,7 +36,7 @@ router.post('/button', async (ctx) => {
 
 function build_response(ctx, player) {
     ctx.response.body = {};
-    ctx.response.body.attachments = [map.build_attachment_for(player)]
+    ctx.response.body.attachments = [map.describe(player.loc)];
 }
 
 function player_by_id(id) {

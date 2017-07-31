@@ -1,4 +1,5 @@
-export function build_attachment(loc) {
+export function describe(loc_id) {
+    var loc = locations[loc_id];
     var attachment = {
         'title': loc.name,
         'text': loc.desc,
@@ -13,10 +14,6 @@ export function build_attachment(loc) {
         });
     }
     return attachment;
-}
-
-export function build_attachment_for(player) {
-    return build_attachment(locations[player.loc]);
 }
 
 var locations = {
