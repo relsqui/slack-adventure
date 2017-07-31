@@ -18,28 +18,18 @@ router.post('/', async (ctx) => {
         return;
     }
     ctx.response.status = 200;
-
-    var id = ctx.request.body.user_id;
-    if (!(id in players)) {
-        players[id] = {
-            'loc': 'center',
-        }
-    }
-    build_response(ctx, players[id]);
+    build_response(ctx, players_by_id[ctx.request.body.user_id]);
 });
 
 router.post('/button', async (ctx) => {
-    // Bodyparse doesn't parse this for us because it's a text field inside
-    // the JSON response object, it just happens to contain more JSON.
     var payload = JSON.parse(ctx.request.body.payload);
     if (payload.token != secrets.VER_TOKEN) {
         ctx.response.status = 403;
         return;
     }
     ctx.response.status = 200;
-    //
-    // By the time they get here they should definitely exist.
-    var player = players[payload.user.id];
+
+    var player = player_by_id(payload.user.id);
     player.loc = payload.actions[0].name;
     build_response(ctx, player);
 });
@@ -47,6 +37,15 @@ router.post('/button', async (ctx) => {
 function build_response(ctx, player) {
     ctx.response.body = {};
     ctx.response.body.attachments = [map.build_attachment_for(player)]
+}
+
+function player_by_id(id) {
+    if (!(id in players)) {
+        players[id] = {
+            'loc': 'center'
+        }
+    }
+    return players[id];
 }
 
 app.use(router.routes());
