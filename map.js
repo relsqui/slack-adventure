@@ -29,9 +29,18 @@ var locations = {
 
     'forest': {
         'name': 'The Forest',
-        'desc': 'It\'s cool, shady, and green.',
+        'desc': 'It\'s cool, shady, and green. There\'s a cave to the east.',
         'exits': {
-            'South': 'center'
+            'South': 'center',
+            'East': 'cave'
+        }
+    },
+
+    'cave': {
+        'name': 'A Cave',
+        'desc': 'It\'s dark. If you believed in old wives\'s tales you might be concerned about being eaten by a grue. But the grues all went extinct a century ago ... didn\'t they?',
+        'exits': {
+            'West': 'forest'
         }
     },
 
